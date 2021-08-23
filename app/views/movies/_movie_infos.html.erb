@@ -1,14 +1,15 @@
-<div class="movie-card">
+<div class="movie-card" data-controller='update-movies'  data-update-movies-target='card'>
   <%= image_tag movie.image_url %>
 
-  <div class="movie-infos">
+  <div class="movie-infos <%= 'd-none' if movie.errors.any? %> " data-update-movies-target='infos'>
     <h2 title="<%= movie.title %> (<%= movie.year %>)">
       <%= movie.title %><small>(<%= movie.year %>)</small>
     </h2>
-    <i class="fas fa-pen fa-xs ml-2"></i>
+    <i class="fas fa-pen fa-xs ml-2" data-action='click->update-movies#toggle' ></i>
   </div>
 
-  <%= simple_form_for movie, html: { class: 'd-none' } do |f| -%>
+  <%# action: event->controller#function %>
+  <%= simple_form_for movie, html: { class: movie.errors.any? ? '' : 'd-none' }, data: { 'update-movies-target': 'form', action: 'submit->update-movies#update' } do |f| -%>
     <%= f.input :title %>
     <%= f.input :year %>
     <%= f.submit "Update movie", class: "btn btn-sm btn-primary btn-block mt-2" %>
